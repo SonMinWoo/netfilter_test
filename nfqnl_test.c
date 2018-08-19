@@ -26,15 +26,19 @@ int compare(unsigned char* buf, int size) {
 	int pre;
 	chkresult = 0;
 	counter = 0;
-	if(size < 4)
+
+
+	if(size < 4){
 		return 4;
+	}
 	for(i=0; i<size-4; i++){
-		if(buf[i] == 'ce'){
-			if(buf[i+1] == '7d'){
-				if(buf[i+2] == 'a4'){
-					if(buf[i+3] == '52'){
+		pre = (char)buf[i];
+		if(buf[i] == 206){
+			if(buf[i+1] == 125){
+				if(buf[i+2] == 164){
+					if(buf[i+3] == 82){
 						chkresult = 9;
-						return 1;
+						return 9;
 					}
 				}
 			}
@@ -53,6 +57,7 @@ static u_int32_t print_pkt (struct nfq_data *tb)
     u_int32_t mark,ifi; 
     int ret;
     unsigned char *data;
+    int x;
     
     ph = nfq_get_msg_packet_hdr(tb);
     if (ph) {
@@ -93,8 +98,9 @@ static u_int32_t print_pkt (struct nfq_data *tb)
     ret = nfq_get_payload(tb, &data);
     if (ret >= 0){
         printf("payload_len=%d ", ret);
+	x = compare(data,ret);
+	printf("\n---------------------------------\n%d\n---------------------------\n",x);
 	dump(data, ret);
-	compare(data, ret);
     }
     fputc('\n', stdout);
 
